@@ -1,0 +1,16 @@
+.classpath
+.project
+*.iml
+hs_err_pid*
+*.tmp
+*.bak
+*.class
+*.log
+.settings/
+.idea/
+/out/
+/*/target
+bin/
+tmp/
+/target/
+/*/.gitignore
