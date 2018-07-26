@@ -1,0 +1,24 @@
+MQ
+Message Queue, 消息队列
+API
+Application Program Interface 应用程序接口
+devops
+Development和Operations的组合
+Quick Start
+入门
+RESTful
+Representational State Transfer，简称REST
+restful
+
+宁静的
+table of contents
+目录
+careful
+
+仔细的
+add
+添加
+addition
+附加
+de
+PREFIX (加在动词之前）表示“否定”，“相反” 
