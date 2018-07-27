@@ -81,7 +81,7 @@ public class SamplePart {
             if (value == null) {
                 noChineseWord.add(word);
             } else {
-                if (!word.equals(value)) {
+                if (!word.toLowerCase().equals(value.toLowerCase())) {
                     // word == value 是因为没有获得翻译。
 
                     String roots = rootOfWords.get(word);
@@ -121,7 +121,7 @@ public class SamplePart {
     }
 
     private StyledText createStyledText(Composite sashForm) {
-        StyledText styledText = new StyledText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+        StyledText styledText = new StyledText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
         styledText.addKeyListener(new KeyAdapter() {
 
             @Override
