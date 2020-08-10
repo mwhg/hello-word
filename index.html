@@ -207,10 +207,10 @@
                 try {
                     // try parse value
                     var json = JSON.parse(value);
-                    if('object' == typeof json){
+                    if ('object' == typeof json) {
                         return colorMulti(layer, key, json);
-                    }                    
-                } catch (error) {                   
+                    }
+                } catch (error) {
                 }
             }
             return colorSingle(layer, key, value, type);
@@ -218,35 +218,6 @@
 
         function color(value) {
             return colorJson(0, null, value);
-        }
-
-        function queryGet(myUrl) {
-            var ajaxObj = new XMLHttpRequest();
-            ajaxObj.open('get', myUrl);
-            ajaxObj.send();
-            ajaxObj.onreadystatechange = function () {
-                if (ajaxObj.readyState == 4 && ajaxObj.status == 200) {
-                    document.getElementById('main').innerHTML = color(parseData(ajaxObj.responseText));
-                    refreshLineNumber();
-                }
-            }
-        }
-
-        function parseData(responseText) {
-            var response = JSON.parse(responseText);
-            if (response.data) {
-                var workflow = new Object();
-                for (let header of response.data.headers) {
-                    if (header.key == "synnex") {
-                        workflow.headers = JSON.parse(header.value);
-                        break;
-                    }
-                }
-                workflow.payload = JSON.parse(response.data.value);
-                return workflow;
-            } else {
-                return "Error, data not found";
-            }
         }
 
         function showLineNumber(total) {
