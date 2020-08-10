@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="author" content="oliver xi">
     <meta name="last-modified" content="2020-06-11">
-    <title>Json Format and color Beauty</title>
+    <title>Workflow Message</title>
     <style type="text/css">
         .json_key {
             color: #92278f;
@@ -188,7 +188,7 @@
                 if (value.startsWith("http://")) {
                     return prefix + '<span class="json_' + type + '" ><a href="' + value + '" target="_blank" class="json_link">"' + value + '"</a></span>';
                 } else {
-                    return prefix + '<span class="json_' + type + '" >"' + value + '"</a></span>';
+                    return prefix + '<span class="json_' + type + '" >"' + value.replace(new RegExp("\\n", "gm"), "<br>").replace(new RegExp("\t", "gm"), "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + '"</a></span>';
                 }
             }
             return prefix + '<span class="json_' + type + '" >' + value + '</span>';
@@ -202,6 +202,16 @@
             var type = typeof value;
             if ('object' == type) {
                 return colorMulti(layer, key, value);
+            }
+            if ("string" == type) {
+                try {
+                    // try parse value
+                    var json = JSON.parse(value);
+                    if('object' == typeof json){
+                        return colorMulti(layer, key, json);
+                    }                    
+                } catch (error) {                   
+                }
             }
             return colorSingle(layer, key, value, type);
         }
@@ -260,8 +270,8 @@
                 root.oldOffsetHeight = root.offsetHeight;
                 var lastNode = root.childNodes[root.childNodes.length - 1];
                 var totalLineNumber = root.childNodes.length == 0 ? 1 : root.offsetHeight * 1.01 / 21;
-                console.log(lastNode);
-                console.log(root.offsetHeight);
+                //console.log(lastNode);
+                //console.log(root.offsetHeight);
                 //var lineOffset = child ? child.offsetHeight : 22;
                 // cause html Outer margins collapsing, The algorithm is complex, and the empirical value is used here, so append 0.01
                 //var totalLineNumber = root.offsetHeight * 1.01 / lineOffset;
