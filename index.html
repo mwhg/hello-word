@@ -58,7 +58,7 @@
 
             /*  min-height: 100%;*/
             /* 最小高度 */
-            min-height: 1rem;
+            min-height: 95%;
             /* 最大高度 */
             _height: 120px;
             margin-left: auto;
@@ -239,8 +239,9 @@
             var line = document.getElementById(lineNumId);
             if (root.offsetHeight != root.oldOffsetHeight) {
                 root.oldOffsetHeight = root.offsetHeight;
-                var lastNode = root.childNodes[root.childNodes.length - 1];
-                var totalLineNumber = root.childNodes.length == 0 ? 1 : root.offsetHeight * 1.01 / 21;
+                //var lastNode = root.childNodes[root.childNodes.length - 1];
+                //var totalLineNumber = root.childNodes.length == 0 ? 1 : root.offsetHeight * 1.01 / 21;
+                var totalLineNumber = root.offsetHeight * 1.01 / 21;
                 //console.log(lastNode);
                 //console.log(root.offsetHeight);
                 //var lineOffset = child ? child.offsetHeight : 22;
@@ -257,7 +258,7 @@
     </script>
 </head>
 
-<body onresize="refreshLineNumber()">
+<body onresize="refreshLineNumber()" onload="refreshLineNumber()">
     <main>
         <article style="background-color:lightgreen;" class="textareaArticle">
             <div style="background-color:coral;" id="line-num1"></div>
