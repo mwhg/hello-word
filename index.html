@@ -3,9 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="author" content="oliver xi">
-    <meta name="last-modified" content="2020-06-11">
-    <title>Workflow Message</title>
+    <meta name="last-modified" content="2020-08-10">
+    <title>Json beauty format>
     <style type="text/css">
         .json_key {
             color: #92278f;
@@ -188,6 +187,7 @@
                 if (value.startsWith("http://")) {
                     return prefix + '<span class="json_' + type + '" ><a href="' + value + '" target="_blank" class="json_link">"' + value + '"</a></span>';
                 } else {
+                    // replace \n \t 
                     return prefix + '<span class="json_' + type + '" >"' + value.replace(new RegExp("\\n", "gm"), "<br>").replace(new RegExp("\t", "gm"), "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + '"</a></span>';
                 }
             }
@@ -205,7 +205,7 @@
             }
             if ("string" == type) {
                 try {
-                    // try parse value
+                    // try deep parse value
                     var json = JSON.parse(value);
                     if ('object' == typeof json) {
                         return colorMulti(layer, key, json);
