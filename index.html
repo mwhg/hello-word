@@ -187,7 +187,7 @@
                 if (value.startsWith("http://")) {
                     return prefix + '<span class="json_' + type + '" ><a href="' + value + '" target="_blank" class="json_link">"' + value + '"</a></span>';
                 } else {
-                    // replace \n \t 
+                    // replace \n to r, replace \t to space*8 
                     return prefix + '<span class="json_' + type + '" >"' + value.replace(new RegExp("\\n", "gm"), "<br>").replace(new RegExp("\t", "gm"), "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + '"</a></span>';
                 }
             }
