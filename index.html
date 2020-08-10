@@ -1,9 +1,308 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Hello world!</title>
+    <meta charset="UTF-8">
+    <meta name="author" content="oliver xi">
+    <meta name="last-modified" content="2020-06-11">
+    <title>Json Format and color Beauty</title>
+    <style type="text/css">
+        .json_key {
+            color: #92278f;
+            font-weight: bold;
+        }
+
+        .json_null {
+            color: #f1592a;
+            font-weight: bold;
+        }
+
+        .json_string {
+            color: #3ab54a;
+            font-weight: bold;
+        }
+
+        .json_number {
+            color: #25aae2;
+            font-weight: bold;
+        }
+
+        .json_boolean {
+            color: #f98280;
+            font-weight: bold;
+        }
+
+        .json_function {
+            color: #a080f9;
+            font-weight: bold;
+        }
+
+        .json_undefined {
+            color: #f98280;
+            font-weight: bold;
+        }
+
+        .json_link {
+            color: #61D2D6;
+            font-weight: bold;
+        }
+
+
+
+
+
+        .custormInput p {
+            margin: 0;
+        }
+
+        .custormInput {
+
+            /*  min-height: 100%;*/
+            /* 最小高度 */
+            min-height: 1rem;
+            /* 最大高度 */
+            _height: 120px;
+            margin-left: auto;
+            /* 外间距 */
+            margin-right: auto;
+
+            /* 内间距 */
+            outline: 0;
+            /* 解决现代浏览器如Firefox在可编辑模式下的div获取焦点的时候会有虚框 */
+            border: 1px solid #a0b3d6;
+
+            word-wrap: break-word;
+            overflow-x: hidden;
+            overflow-y: layout;
+            _overflow-y: visible;
+            -webkit-user-modify: read-write-plaintext-only;
+            -moz-user-modify: read-write-plaintext-only;
+            -ms-user-modify: read-write-plaintext-only;
+            user-modify: read-write-plaintext-only;
+        }
+
+        .custormInput:focus {
+            box-shadow: 0 0 6px rgba(0, 100, 255, .45);
+            border-color: #34538b;
+        }
+
+        /* 实现默认提示功能 */
+        .custormInput:empty:before {
+            content: attr(placeholder);
+            color: rgba(0, 0, 0, .5);
+        }
+
+        /* 模仿placeholder*/
+        .custormInput:focus:before {
+            content: none;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        main {
+
+            height: 90%;
+            margin: 0;
+            display: flex;
+        }
+
+
+        .colorArticle {
+            flex: 1;
+            height: 100%;
+            margin-left: 1rem;
+            margin-right: 1rem;
+
+            overflow: auto;
+        }
+
+        .textareaArticle {
+            flex: 1;
+            height: 100%;
+            margin-left: 1rem;
+            margin-right: 1rem;
+
+            overflow: auto;
+
+            position: relative;
+        }
+
+
+        #line-num,
+        #line-num1 {
+            float: left;
+            border-right: 1px dashed rgb(174, 192, 174);
+            text-align: right;
+            padding-right: 0.5rem;
+            margin-right: 1rem;
+            overflow-y: hidden;
+        }
+
+
+
+        textarea {
+            height: 100%;
+            min-width: 300px;
+            background-color: #92278f;
+        }
+    </style>
+    <script type="text/javascript">
+        function spaceLayer(layer) {
+            var space = "";
+            for (var i = 0; i < layer; i++) {
+                space += "&nbsp;&nbsp;&nbsp;&nbsp;";
+            }
+            return space;
+        }
+        function colorMulti(layer, key, object) {
+            var space = spaceLayer(layer);
+            var prefix = space;
+            if (key) {
+                prefix += '<span class="json_key">"' + key + '"</span><span> : </span>';
+            }
+            if (typeof object.length == 'number') {
+                //array
+                const itemsAsHtml = object.map(item => {
+                    return colorJson(layer + 1, null, item);
+                });
+                return prefix + "[<br>" + itemsAsHtml.join(",<br>") + "<br>" + space + "]";
+            } else {
+                const itemsAsHtml = Object.keys(object).map(key => {
+                    return colorJson(layer + 1, key, object[key]);
+                });
+                return prefix + "{<br>" + itemsAsHtml.join(",<br>") + "<br>" + space + "}";
+            }
+        }
+
+        function colorSingle(layer, key, value, type) {
+            var space = spaceLayer(layer);
+            var prefix = space;
+            if (key) {
+                prefix += '<span class="json_key">"' + key + '"</span><span> : </span>';
+            }
+            if ("string" == type) {
+                if (value.startsWith("http://")) {
+                    return prefix + '<span class="json_' + type + '" ><a href="' + value + '" target="_blank" class="json_link">"' + value + '"</a></span>';
+                } else {
+                    return prefix + '<span class="json_' + type + '" >"' + value + '"</a></span>';
+                }
+            }
+            return prefix + '<span class="json_' + type + '" >' + value + '</span>';
+        }
+
+        function colorJson(layer, key, value) {
+            if (null == value) {
+                // null's type is object, but should use null
+                return colorSingle(layer, key, value, "null");
+            }
+            var type = typeof value;
+            if ('object' == type) {
+                return colorMulti(layer, key, value);
+            }
+            return colorSingle(layer, key, value, type);
+        }
+
+        function color(value) {
+            return colorJson(0, null, value);
+        }
+
+        function queryGet(myUrl) {
+            var ajaxObj = new XMLHttpRequest();
+            ajaxObj.open('get', myUrl);
+            ajaxObj.send();
+            ajaxObj.onreadystatechange = function () {
+                if (ajaxObj.readyState == 4 && ajaxObj.status == 200) {
+                    document.getElementById('main').innerHTML = color(parseData(ajaxObj.responseText));
+                    refreshLineNumber();
+                }
+            }
+        }
+
+        function parseData(responseText) {
+            var response = JSON.parse(responseText);
+            if (response.data) {
+                var workflow = new Object();
+                for (let header of response.data.headers) {
+                    if (header.key == "synnex") {
+                        workflow.headers = JSON.parse(header.value);
+                        break;
+                    }
+                }
+                workflow.payload = JSON.parse(response.data.value);
+                return workflow;
+            } else {
+                return "Error, data not found";
+            }
+        }
+
+        function showLineNumber(total) {
+            var body = "";
+            for (var index = 1; index <= total; index++) {
+                body += "<div>" + index + "</div>";
+            }
+            return body;
+        }
+
+        function refreshLineNumber() {
+            doRefreshLineNumber('main', 'line-num');
+            doRefreshLineNumber('custormInput', 'line-num1');
+        }
+
+        function doRefreshLineNumber(mainId, lineNumId) {
+
+            var root = document.getElementById(mainId);
+            var line = document.getElementById(lineNumId);
+            if (root.offsetHeight != root.oldOffsetHeight) {
+                root.oldOffsetHeight = root.offsetHeight;
+                var lastNode = root.childNodes[root.childNodes.length - 1];
+                var totalLineNumber = root.childNodes.length == 0 ? 1 : root.offsetHeight * 1.01 / 21;
+                console.log(lastNode);
+                console.log(root.offsetHeight);
+                //var lineOffset = child ? child.offsetHeight : 22;
+                // cause html Outer margins collapsing, The algorithm is complex, and the empirical value is used here, so append 0.01
+                //var totalLineNumber = root.offsetHeight * 1.01 / lineOffset;
+                if (line.totalLineNumber != totalLineNumber) {
+                    line.totalLineNumber = totalLineNumber;
+                    document.getElementById(lineNumId).innerHTML = showLineNumber(totalLineNumber);
+                }
+            }
+
+        }
+
+    </script>
 </head>
-<body>
-  Hello!
+
+<body onresize="refreshLineNumber()">
+    <main>
+        <article style="background-color:lightgreen;" class="textareaArticle">
+            <div style="background-color:coral;" id="line-num1"></div>
+            <div class="custormInput" id="custormInput" contenteditable="true"
+                placeholder='Please type or parse your json'></div>
+        </article>
+        <article class="colorArticle">
+            <div id="line-num"></div>
+            <div id="main"></div>
+        </article>
+    </main>
+    <script>
+        function parseAndColor() {
+            var source = document.getElementById('custormInput').innerHTML;
+            try {
+                var sourceJson = JSON.parse(source);
+                document.getElementById('main').innerHTML = color(sourceJson);
+            } catch (e) {
+                console.log(e);
+                document.getElementById('main').innerHTML = source;
+            }
+            refreshLineNumber();
+        }
+        var targetNode = document.getElementById('custormInput');
+        targetNode.addEventListener('DOMSubtreeModified', parseAndColor);
+    </script>
 </body>
+
 </html>
