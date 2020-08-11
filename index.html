@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="last-modified" content="2020-08-10">
-    <title>Json beauty format</title>
+    <meta name="last-modified" content="2020-08-11">
+    <title>Pretty Json</title>
     <style type="text/css">
         .json_key {
             color: #92278f;
@@ -187,9 +187,8 @@
                 if (value.startsWith("http://")) {
                     return prefix + '<span class="json_' + type + '" ><a href="' + value + '" target="_blank" class="json_link">"' + value + '"</a></span>';
                 } else {
-                    // replace \n to r, replace \t to space*8 
-                    // must use both regexp and substr 
-                    return prefix + '<span class="json_' + type + '" >"' + value.replace(new RegExp("\\n", "gm"), "<br>").replace(new RegExp("\t", "gm"), "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").replace("\\n", "<br>").replace("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + '"</span>';
+                    //replace \n to br, \t to space*8
+                    return prefix + '<span class="json_' + type + '" >"' + value.replace(new RegExp("\\n", "gm"), "<br>").replace(new RegExp("\\t", "gm"), "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + '"</span>';
                 }
             }
             return prefix + '<span class="json_' + type + '" >' + value + '</span>';
@@ -219,6 +218,19 @@
 
         function color(value) {
             return colorJson(0, null, value);
+        }
+
+        function tryParse(value) {
+            try {
+                return JSON.parse(value);
+            } catch (e) {
+                //replace \\n to br, \\t to space*8
+                return value.replace(new RegExp("\\\\n", "gm"), "<br>").replace(new RegExp("\\\\t", "gm"), "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+            }
+        }
+
+        function prettyFormat(value) {
+            return color(tryParse(value));
         }
 
         function showLineNumber(total) {
@@ -253,8 +265,13 @@
                     document.getElementById(lineNumId).innerHTML = showLineNumber(totalLineNumber);
                 }
             }
-
         }
+        function prettyParse() {
+            var source = document.getElementById('custormInput').innerHTML;
+            document.getElementById('main').innerHTML = prettyFormat(source);
+            refreshLineNumber();
+        }
+
 
     </script>
 </head>
@@ -272,19 +289,7 @@
         </article>
     </main>
     <script>
-        function parseAndColor() {
-            var source = document.getElementById('custormInput').innerHTML;
-            try {
-                var sourceJson = JSON.parse(source);
-                document.getElementById('main').innerHTML = color(sourceJson);
-            } catch (e) {
-                console.log(e);
-                document.getElementById('main').innerHTML = color(source);
-            }
-            refreshLineNumber();
-        }
-        var targetNode = document.getElementById('custormInput');
-        targetNode.addEventListener('DOMSubtreeModified', parseAndColor);
+        document.getElementById('custormInput').addEventListener('DOMSubtreeModified', prettyParse);
     </script>
 </body>
 
