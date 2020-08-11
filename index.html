@@ -207,8 +207,13 @@
                 try {
                     // try deep parse value
                     var json = JSON.parse(value);
-                    if ('object' == typeof json) {
+                    var jsonType = typeof json;
+                    if ('object' == jsonType) {
                         return colorMulti(layer, key, json);
+                    }
+                    if (layer == 0) {
+                        // 最外面1层，处理所有可解析情况。其他情况，只处理map和array，其余按string处理。
+                        return colorSingle(layer, key, json, jsonType)
                     }
                 } catch (error) {
                 }
@@ -271,19 +276,13 @@
         </article>
     </main>
     <script>
-        function parseAndColor() {
+        function pretty() {
             var source = document.getElementById('custormInput').innerHTML;
-            try {
-                var sourceJson = JSON.parse(source);
-                document.getElementById('main').innerHTML = color(sourceJson);
-            } catch (e) {
-                console.log(e);
-                document.getElementById('main').innerHTML = source;
-            }
+            document.getElementById('main').innerHTML = color(source);
             refreshLineNumber();
         }
         var targetNode = document.getElementById('custormInput');
-        targetNode.addEventListener('DOMSubtreeModified', parseAndColor);
+        targetNode.addEventListener('DOMSubtreeModified', pretty);
     </script>
 </body>
 
