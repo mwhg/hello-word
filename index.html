@@ -188,7 +188,8 @@
                     return prefix + '<span class="json_' + type + '" ><a href="' + value + '" target="_blank" class="json_link">"' + value + '"</a></span>';
                 } else {
                     // replace \n to r, replace \t to space*8 
-                    return prefix + '<span class="json_' + type + '" >"' + value.replace(new RegExp("\\n", "gm"), "<br>").replace(new RegExp("\t", "gm"), "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + '"</a></span>';
+                    // must use both regexp and substr 
+                    return prefix + '<span class="json_' + type + '" >"' + value.replace(new RegExp("\\n", "gm"), "<br>").replace(new RegExp("\t", "gm"), "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;").replace("\\n", "<br>").replace("\\t", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + '"</span>';
                 }
             }
             return prefix + '<span class="json_' + type + '" >' + value + '</span>';
@@ -207,13 +208,8 @@
                 try {
                     // try deep parse value
                     var json = JSON.parse(value);
-                    var jsonType = typeof json;
-                    if ('object' == jsonType) {
+                    if ('object' == typeof json) {
                         return colorMulti(layer, key, json);
-                    }
-                    if (layer == 0) {
-                        // 最外面1层，处理所有可解析情况。其他情况，只处理map和array，其余按string处理。
-                        return colorSingle(layer, key, json, jsonType)
                     }
                 } catch (error) {
                 }
@@ -276,13 +272,19 @@
         </article>
     </main>
     <script>
-        function pretty() {
+        function parseAndColor() {
             var source = document.getElementById('custormInput').innerHTML;
-            document.getElementById('main').innerHTML = color(source);
+            try {
+                var sourceJson = JSON.parse(source);
+                document.getElementById('main').innerHTML = color(sourceJson);
+            } catch (e) {
+                console.log(e);
+                document.getElementById('main').innerHTML = color(source);
+            }
             refreshLineNumber();
         }
         var targetNode = document.getElementById('custormInput');
-        targetNode.addEventListener('DOMSubtreeModified', pretty);
+        targetNode.addEventListener('DOMSubtreeModified', parseAndColor);
     </script>
 </body>
 
