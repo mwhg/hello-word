@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="last-modified" content="2020-08-11">
+    <meta name="last-modified" content="2020-08-12">
     <title>Pretty Json</title>
     <style type="text/css">
         .json_key {
@@ -190,8 +190,8 @@
                 if (value.startsWith("http://")) {
                     return prefix + '<span class="json_' + type + '" ><a href="' + value + '" target="_blank" class="json_link">"' + value + '"</a></span>';
                 } else {
-                    //replace \n to br, \t to space*8
-                    return prefix + '<span class="json_' + type + '" >"' + value.replace(new RegExp("\\n", "gm"), "<br>").replace(new RegExp("\\t", "gm"), "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;") + '"</span>';
+                    //white-space:pre
+                    return prefix + '<span class="json_' + type + '" style="white-space:pre">"' + value + '"</span>';
                 }
             }
             return prefix + '<span class="json_' + type + '" >' + value + '</span>';
@@ -227,8 +227,8 @@
             try {
                 return JSON.parse(value);
             } catch (e) {
-                //replace \\n to br, \\t to space*8
-                return value.replace(new RegExp("\\\\n", "gm"), "<br>").replace(new RegExp("\\\\t", "gm"), "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                //replace \\n to \n, \\t to \t
+                return value.replace(new RegExp("\\\\n", "gm"), "\n").replace(new RegExp("\\\\t", "gm"), "\t");
             }
         }
 
