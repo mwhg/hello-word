@@ -227,8 +227,19 @@
             try {
                 return JSON.parse(value);
             } catch (e) {
-                //replace \\n to \n, \\t to \t
-                return value.replace(new RegExp("\\\\n", "gm"), "\n").replace(new RegExp("\\\\t", "gm"), "\t");
+                //replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）;
+                return value.replace(new RegExp("\\\\[\\\\nt]", "gm"), function(word){      
+                    if(word=="\\\\"){
+                        return "\\";
+                    }
+                    if(word=="\\n"){
+                        return "\n";
+                    }
+                    if(word=="\\t"){
+                        return "\t";
+                    }                    
+                    return word;
+                });
             }
         }
 
@@ -284,7 +295,7 @@
         <article style="background-color:lightgreen;" class="textareaArticle">
             <div style="background-color:coral;" id="line-num1"></div>
             <div class="custormInput" id="custormInput" contenteditable="true"
-                placeholder='Please type or parse your json, Deep parse format json, replace \n to br, \t to space*8'></div>
+                placeholder='Please type or parse your json, We will Deep parse format the json, replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）'></div>
         </article>
         <article class="colorArticle">
             <div id="line-num"></div>
