@@ -286,7 +286,7 @@
             doRefreshLineNumber('custormInput', 'line-num1');
         }
 
-        function refreshOutputLineNumber(){
+        function refreshOutputLineNumber() {
             doRefreshLineNumber('main', 'line-num');
         }
 
@@ -297,15 +297,15 @@
     <main>
         <article style="background-color:lightgreen;" class="textareaArticle">
             <div style="background-color:coral;" id="line-num1"></div>
-            <div class="custormInput" id="custormInput" contenteditable="true"
-                placeholder='Please type or parse your json, We will Deep parse format the json, replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）'>
-            </div>
+            <div placeholder="Please type or parse your json, We will Deep parse format the json, replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）"
+                class="custormInput" id="custormInput" contenteditable="true"></div>
+
         </article>
-        <article class="colorArticle"  >
-            
-                        <div id="line-num"></div>
-                        <div class="custormInput"  id="main"></div>
-                   
+        <article class="colorArticle">
+
+            <div id="line-num"></div>
+            <div class="custormInput" id="main"></div>
+
         </article>
     </main>
     <script>
