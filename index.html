@@ -102,13 +102,13 @@
         }
 
         main {
-   
+
             height: 90%;
             margin: 0;
             display: flex;
         }
 
-        header{
+        header {
             margin-left: 100px;
         }
 
@@ -191,7 +191,7 @@
                     return prefix + '<span class="json_' + type + '" ><a href="' + value + '" target="_blank" class="json_link">"' + value + '"</a></span>';
                 } else {
                     //white-space:pre
-                    return prefix + '<span class="json_' + type + '" style="white-space:pre">"' + value + '"</span>';
+                    return prefix + '<div class="json_' + type + '"  style="display:contents">"' + value + '"</div>';
                 }
             }
             return prefix + '<span class="json_' + type + '" >' + value + '</span>';
@@ -228,16 +228,16 @@
                 return JSON.parse(value);
             } catch (e) {
                 //replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）;
-                return value.replace(new RegExp("\\\\[\\\\nt]", "gm"), function(word){      
-                    if(word=="\\\\"){
+                return value.replace(new RegExp("\\\\[\\\\nt]", "gm"), function (word) {
+                    if (word == "\\\\") {
                         return "\\";
                     }
-                    if(word=="\\n"){
+                    if (word == "\\n") {
                         return "\n";
                     }
-                    if(word=="\\t"){
+                    if (word == "\\t") {
                         return "\t";
-                    }                    
+                    }
                     return word;
                 });
             }
@@ -283,9 +283,12 @@
         function prettyParse() {
             var source = document.getElementById('custormInput').innerHTML;
             document.getElementById('main').innerHTML = prettyFormat(source);
-            refreshLineNumber();
+            doRefreshLineNumber('custormInput', 'line-num1');
         }
 
+        function refreshOutputLineNumber() {
+            doRefreshLineNumber('main', 'line-num');
+        }
 
     </script>
 </head>
@@ -294,16 +297,21 @@
     <main>
         <article style="background-color:lightgreen;" class="textareaArticle">
             <div style="background-color:coral;" id="line-num1"></div>
-            <div class="custormInput" id="custormInput" contenteditable="true"
-                placeholder='Please type or parse your json, We will Deep parse format the json, replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）'></div>
+            <div placeholder="Please type or parse your json, We will Deep parse format the json, replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）"
+                class="custormInput" id="custormInput" contenteditable="true"></div>
+
         </article>
         <article class="colorArticle">
+
             <div id="line-num"></div>
-            <div id="main"></div>
+            <div class="custormInput" id="main"></div>
+
         </article>
     </main>
     <script>
         document.getElementById('custormInput').addEventListener('DOMSubtreeModified', prettyParse);
+        document.getElementById('main').addEventListener('DOMSubtreeModified', refreshOutputLineNumber);
+
     </script>
 </body>
 
