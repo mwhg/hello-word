@@ -46,9 +46,9 @@
             font-weight: bold;
         }
 
-
-
-
+        .hidden {
+            display: hidden;
+        }
 
         .custormInput p {
             margin: 0;
@@ -144,7 +144,9 @@
             overflow-y: hidden;
         }
 
-
+        #inputArticle{
+            transition: display 2s;
+        }
 
         textarea {
             height: 100%;
@@ -290,20 +292,33 @@
             doRefreshLineNumber('main', 'line-num');
         }
 
+        function showOrHide() {
+            var div = document.getElementById('inputArticle');
+           
+            //div.classList.add(".hidden");
+            if(div.style.display!="none"){
+                div.style.display="none";
+           }else{
+                div.style.display="block";
+            }
+          
+        }
+
     </script>
 </head>
 
 <body onresize="refreshLineNumber()" onload="refreshLineNumber()">
     <main>
-        <article style="background-color:lightgreen;" class="textareaArticle">
-            <div style="background-color:coral;" id="line-num1"></div>
+        <article id="inputArticle" style="background-color:lightgreen;" class="textareaArticle">
+            <div style="background-color:coral;" id="line-num1"  onclick="showOrHide()"></div>
             <div placeholder="Please type or parse your json, We will Deep parse format the json, replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）"
                 class="custormInput" id="custormInput" contenteditable="true"></div>
 
         </article>
-        <article class="colorArticle">
+        
+        <article style="background-color:lightgreen;" class="colorArticle">
 
-            <div id="line-num"></div>
+            <div style="background-color:coral;" id="line-num" onclick="showOrHide()"></div>
             <div class="custormInput" id="main"></div>
 
         </article>
@@ -316,3 +331,4 @@
 </body>
 
 </html>
+
