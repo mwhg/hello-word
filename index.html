@@ -144,7 +144,7 @@
             overflow-y: hidden;
         }
 
-        #inputArticle{
+        #inputArticle {
             transition: display 2s;
         }
 
@@ -294,14 +294,48 @@
 
         function showOrHide() {
             var div = document.getElementById('inputArticle');
-           
-            //div.classList.add(".hidden");
-            if(div.style.display!="none"){
-                div.style.display="none";
-           }else{
-                div.style.display="block";
+
+            if (div.style.display != "none") {
+                div.style.display = "none";
+            } else {
+                div.style.display = "block";
             }
-          
+
+        }
+
+        function hide() {
+            var div = document.getElementById('inputArticle');
+
+            div.style.display = "none";
+
+
+        }
+
+
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) {
+                return unescape(r[2]);
+            } else {
+                return null;
+            }
+        }
+
+        function showContentPath() {
+            var contentPath = getUrlParam("contentPath");
+            if (contentPath != null) {
+                var ajaxObj = new XMLHttpRequest();
+                ajaxObj.open('get', contentPath);
+                ajaxObj.send();
+
+                ajaxObj.onreadystatechange = function () {
+                    if (ajaxObj.readyState == 4 && ajaxObj.status == 200) {
+                        document.getElementById('custormInput').innerHTML = ajaxObj.responseText;
+                        hide();
+                    }
+                }
+            }
         }
 
     </script>
@@ -310,12 +344,12 @@
 <body onresize="refreshLineNumber()" onload="refreshLineNumber()">
     <main>
         <article id="inputArticle" style="background-color:lightgreen;" class="textareaArticle">
-            <div style="background-color:coral;" id="line-num1"  onclick="showOrHide()"></div>
+            <div style="background-color:coral;" id="line-num1" onclick="showOrHide()"></div>
             <div placeholder="Please type or parse your json, We will Deep parse format the json, replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）"
                 class="custormInput" id="custormInput" contenteditable="true"></div>
 
         </article>
-        
+
         <article style="background-color:lightgreen;" class="colorArticle">
 
             <div style="background-color:coral;" id="line-num" onclick="showOrHide()"></div>
@@ -326,9 +360,10 @@
     <script>
         document.getElementById('custormInput').addEventListener('DOMSubtreeModified', prettyParse);
         document.getElementById('main').addEventListener('DOMSubtreeModified', refreshOutputLineNumber);
+        showContentPath();
+
 
     </script>
 </body>
 
 </html>
-
