@@ -46,10 +46,6 @@
             font-weight: bold;
         }
 
-        .hidden {
-            display: hidden;
-        }
-
         .custormInput p {
             margin: 0;
         }
@@ -96,14 +92,18 @@
             content: none;
         }
 
-        html,
-        body {
+        html{
             height: 100%;
+            overflow-y: hidden;
+        }
+        body {
+            height: 95%;
+            overflow-y: hidden;
         }
 
         main {
 
-            height: 90%;
+            height: 100%;
             margin: 0;
             display: flex;
         }
@@ -117,8 +117,6 @@
             flex: 1;
             height: 100%;
             margin-left: 1rem;
-            margin-right: 1rem;
-
             overflow: auto;
         }
 
@@ -126,7 +124,7 @@
             flex: 1;
             height: 100%;
             margin-left: 1rem;
-            margin-right: 1rem;
+           
 
             overflow: auto;
 
@@ -323,7 +321,7 @@
         }
 
         function showContentPath() {
-            var contentPath = getUrlParam("contentPath");
+            var contentPath = getUrlParam("path");
             if (contentPath != null) {
                 var ajaxObj = new XMLHttpRequest();
                 ajaxObj.open('get', contentPath);
