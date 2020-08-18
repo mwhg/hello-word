@@ -92,10 +92,11 @@
             content: none;
         }
 
-        html{
+        html {
             height: 100%;
             overflow-y: hidden;
         }
+
         body {
             height: 95%;
             overflow-y: hidden;
@@ -124,7 +125,7 @@
             flex: 1;
             height: 100%;
             margin-left: 1rem;
-           
+
 
             overflow: auto;
 
@@ -341,16 +342,16 @@
 
 <body onresize="refreshLineNumber()" onload="refreshLineNumber()">
     <main>
-        <article id="inputArticle" style="background-color:lightgreen;" class="textareaArticle">
-            <div style="background-color:coral;" id="line-num1" onclick="showOrHide()"></div>
+        <article id="inputArticle" class="textareaArticle">
+            <div id="line-num1" onclick="showOrHide()"></div>
             <div placeholder="Please type or parse your json, We will Deep parse format the json, replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）"
                 class="custormInput" id="custormInput" contenteditable="true"></div>
 
         </article>
 
-        <article style="background-color:lightgreen;" class="colorArticle">
+        <article class="colorArticle">
 
-            <div style="background-color:coral;" id="line-num" onclick="showOrHide()"></div>
+            <div id="line-num" onclick="showOrHide()"></div>
             <div class="custormInput" id="main"></div>
 
         </article>
