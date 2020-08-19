@@ -282,7 +282,7 @@
             }
         }
         function prettyParse() {
-            var source = document.getElementById('custormInput').innerHTML;
+            var source = document.getElementById('custormInput').innerText;
             document.getElementById('main').innerHTML = prettyFormat(source);
             doRefreshLineNumber('custormInput', 'line-num1');
         }
