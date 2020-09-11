@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="last-modified" content="2020-08-12">
+    <meta name="last-modified" content="2020-09-11">
     <title>Pretty Json</title>
     <style type="text/css">
         .json_key {
@@ -46,111 +46,76 @@
             font-weight: bold;
         }
 
-        .custormInput p {
-            margin: 0;
+        body {
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            top: 0px;
+            bottom: 0px;
         }
 
-        .custormInput {
+        main {
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            top: 0px;
+            bottom: 0px;
+            margin: 5px;
+            display: flex;
+        }
 
-            /*  min-height: 100%;*/
-            /* 最小高度 */
-            min-height: 95%;
-            /* 最大高度 */
-            _height: 120px;
-            margin-left: auto;
-            /* 外间距 */
-            margin-right: auto;
-
-            /* 内间距 */
-            outline: 0;
-            /* 解决现代浏览器如Firefox在可编辑模式下的div获取焦点的时候会有虚框 */
+        article {
+            flex: 1;
+            height: 100%;
+            overflow: auto;
             border: 1px solid #a0b3d6;
+        }
 
+        #inputArticle {
+            margin-right: 1rem;
+        }
+
+        .custormTextarea {
+            box-sizing: border-box;
+            min-height: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            outline: 0;
+            border: 1px dashed #a0b3d6;
             word-wrap: break-word;
             overflow-x: hidden;
-            overflow-y: layout;
-            _overflow-y: visible;
             -webkit-user-modify: read-write-plaintext-only;
             -moz-user-modify: read-write-plaintext-only;
             -ms-user-modify: read-write-plaintext-only;
             user-modify: read-write-plaintext-only;
         }
 
-        .custormInput:focus {
+        .custormTextarea:focus {
+            border: 1px solid #a0b3d6;
             box-shadow: 0 0 6px rgba(0, 100, 255, .45);
             border-color: #34538b;
         }
 
-        /* 实现默认提示功能 */
-        .custormInput:empty:before {
+        .custormTextarea:empty:before {
             content: attr(placeholder);
             color: rgba(0, 0, 0, .5);
         }
 
-        /* 模仿placeholder*/
-        .custormInput:focus:before {
+        .custormTextarea:focus:before {
             content: none;
         }
 
-        html {
-            height: 100%;
-            overflow-y: hidden;
-        }
-
-        body {
-            height: 95%;
-            overflow-y: hidden;
-        }
-
-        main {
-
-            height: 100%;
-            margin: 0;
-            display: flex;
-        }
-
-        header {
-            margin-left: 100px;
-        }
-
-
-        .colorArticle {
-            flex: 1;
-            height: 100%;
-            margin-left: 1rem;
-            overflow: auto;
-        }
-
-        .textareaArticle {
-            flex: 1;
-            height: 100%;
-            margin-left: 1rem;
-
-
-            overflow: auto;
-
-            position: relative;
-        }
-
-
-        #line-num,
-        #line-num1 {
+        .lineNumber {
+            box-sizing: border-box;
             float: left;
-            border-right: 1px dashed rgb(174, 192, 174);
             text-align: right;
             padding-right: 0.5rem;
-            margin-right: 1rem;
+            padding-left: 0.5rem;
             overflow-y: hidden;
         }
 
         #inputArticle {
             transition: display 2s;
-        }
-
-        textarea {
-            height: 100%;
-            min-width: 300px;
-            background-color: #92278f;
         }
     </style>
     <script type="text/javascript">
@@ -257,59 +222,58 @@
         }
 
         function refreshLineNumber() {
-            doRefreshLineNumber('main', 'line-num');
-            doRefreshLineNumber('custormInput', 'line-num1');
+            doRefreshLineNumber('inputTextarea', 'inputLineNumber');
+            doRefreshLineNumber('outputTextarea', 'outputLineNumber');
         }
 
-        function doRefreshLineNumber(mainId, lineNumId) {
+        function doRefreshLineNumber(textareaId, lineNumberId) {
 
-            var root = document.getElementById(mainId);
-            var line = document.getElementById(lineNumId);
-            if (root.offsetHeight != root.oldOffsetHeight) {
-                root.oldOffsetHeight = root.offsetHeight;
-                //var lastNode = root.childNodes[root.childNodes.length - 1];
-                //var totalLineNumber = root.childNodes.length == 0 ? 1 : root.offsetHeight * 1.01 / 21;
-                var totalLineNumber = root.offsetHeight * 1.01 / 21;
-                //console.log(lastNode);
-                //console.log(root.offsetHeight);
-                //var lineOffset = child ? child.offsetHeight : 22;
-                // cause html Outer margins collapsing, The algorithm is complex, and the empirical value is used here, so append 0.01
-                //var totalLineNumber = root.offsetHeight * 1.01 / lineOffset;
-                if (line.totalLineNumber != totalLineNumber) {
-                    line.totalLineNumber = totalLineNumber;
-                    document.getElementById(lineNumId).innerHTML = showLineNumber(totalLineNumber);
+            var textareaElement = document.getElementById(textareaId);
+            var lineNumberElement = document.getElementById(lineNumberId);
+            if (textareaElement.offsetHeight != textareaElement.oldOffsetHeight) {
+                textareaElement.oldOffsetHeight = textareaElement.offsetHeight;
+                //not use firstChild, but use firstElementChild, 
+                //please ensure there is a elementChild in lineNumberElement, <div>1</div>, and append 1 
+                var firstElementChildOffsetHeight = lineNumberElement.firstElementChild.offsetHeight;
+                // if inputArticle is hide, the firstElementChildOffsetHeight == 0
+                if (firstElementChildOffsetHeight > 0) {
+                    var totalLineNumber = textareaElement.offsetHeight / firstElementChildOffsetHeight + 1;
+                    if (lineNumberElement.totalLineNumber != totalLineNumber) {
+                        lineNumberElement.totalLineNumber = totalLineNumber;
+                        document.getElementById(lineNumberId).innerHTML = showLineNumber(totalLineNumber);
+                        // ensure line offsetHeight equals textareaElement offsetHeight
+                        lineNumberElement.style.height = textareaElement.offsetHeight + "px";
+                    }
                 }
+
             }
         }
+
         function prettyParse() {
-            var source = document.getElementById('custormInput').innerText;
-            document.getElementById('main').innerHTML = prettyFormat(source);
-            doRefreshLineNumber('custormInput', 'line-num1');
+            var source = document.getElementById('inputTextarea').innerText;
+            document.getElementById('outputTextarea').innerHTML = prettyFormat(source);
+            doRefreshLineNumber('inputTextarea', 'inputLineNumber');
         }
 
         function refreshOutputLineNumber() {
-            doRefreshLineNumber('main', 'line-num');
+            doRefreshLineNumber('outputTextarea', 'outputLineNumber');
         }
 
-        function showOrHide() {
-            var div = document.getElementById('inputArticle');
-
-            if (div.style.display != "none") {
-                div.style.display = "none";
+        function showOrHideInputArticle() {
+            var inputArticle = document.getElementById('inputArticle');
+            if (inputArticle.style.display != "none") {
+                inputArticle.style.display = "none";
             } else {
-                div.style.display = "block";
+                inputArticle.style.display = "block";
             }
-
+            doRefreshLineNumber('inputTextarea', 'inputLineNumber');
+            doRefreshLineNumber('outputTextarea', 'outputLineNumber');
         }
 
-        function hide() {
+        function hideInputArticle() {
             var div = document.getElementById('inputArticle');
-
             div.style.display = "none";
-
-
         }
-
 
         function getUrlParam(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -322,17 +286,24 @@
         }
 
         function showContentPath() {
+            // path or content
             var contentPath = getUrlParam("path");
             if (contentPath != null) {
+                hideInputArticle();
                 var ajaxObj = new XMLHttpRequest();
                 ajaxObj.open('get', contentPath);
                 ajaxObj.send();
 
                 ajaxObj.onreadystatechange = function () {
                     if (ajaxObj.readyState == 4 && ajaxObj.status == 200) {
-                        document.getElementById('custormInput').innerHTML = ajaxObj.responseText;
-                        hide();
+                        document.getElementById('inputTextarea').innerHTML = ajaxObj.responseText;
                     }
+                }
+            } else {
+                var content = getUrlParam("content");
+                if (content != null) {
+                    hideInputArticle();
+                    document.getElementById('inputTextarea').innerHTML = content;
                 }
             }
         }
@@ -340,28 +311,26 @@
     </script>
 </head>
 
-<body onresize="refreshLineNumber()" onload="refreshLineNumber()">
+<body onload="refreshLineNumber()" onresize="refreshLineNumber()">
     <main>
-        <article id="inputArticle" class="textareaArticle">
-            <div id="line-num1" onclick="showOrHide()"></div>
+        <article id="inputArticle">
+            <div id="inputLineNumber" class="lineNumber" onclick="showOrHideInputArticle()">
+                <div>1</div>
+            </div>
             <div placeholder="Please type or parse your json, We will Deep parse format the json, replace \\\\ to \\(real \\ to \), \\n to \n(real \n to its escape character), \\t to \t（real \t to its escape character）"
-                class="custormInput" id="custormInput" contenteditable="true"></div>
-
+                id="inputTextarea" class="custormTextarea " contenteditable="true"></div>
         </article>
-
-        <article class="colorArticle">
-
-            <div id="line-num" onclick="showOrHide()"></div>
-            <div class="custormInput" id="main"></div>
-
+        <article id="outputArticle">
+            <div id="outputLineNumber" class="lineNumber" onclick="showOrHideInputArticle()">
+                <div>1</div>
+            </div>
+            <div id="outputTextarea" class="custormTextarea"></div>
         </article>
     </main>
     <script>
-        document.getElementById('custormInput').addEventListener('DOMSubtreeModified', prettyParse);
-        document.getElementById('main').addEventListener('DOMSubtreeModified', refreshOutputLineNumber);
+        document.getElementById('inputTextarea').addEventListener('DOMSubtreeModified', prettyParse);
+        document.getElementById('outputTextarea').addEventListener('DOMSubtreeModified', refreshOutputLineNumber);
         showContentPath();
-
-
     </script>
 </body>
 
