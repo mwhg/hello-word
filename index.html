@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="last-modified" content="2020-09-11">
+    <meta name="last-modified" content="2020-09-13">
     <title>Pretty Json</title>
     <style type="text/css">
         .json_key {
@@ -227,24 +227,27 @@
         }
 
         function doRefreshLineNumber(textareaId, lineNumberId) {
-
             var textareaElement = document.getElementById(textareaId);
             var lineNumberElement = document.getElementById(lineNumberId);
-            if (textareaElement.offsetHeight != textareaElement.oldOffsetHeight) {
-                textareaElement.oldOffsetHeight = textareaElement.offsetHeight;
-                //not use firstChild, but use firstElementChild, 
-                //please ensure there is a elementChild in lineNumberElement, <div>1</div>, and append 1 
-                var firstElementChildOffsetHeight = lineNumberElement.firstElementChild.offsetHeight;
-                // if inputArticle is hide, the firstElementChildOffsetHeight == 0
-                if (firstElementChildOffsetHeight > 0) {
-                    var totalLineNumber = textareaElement.offsetHeight / firstElementChildOffsetHeight + 1;
+            var textareaElementOffsetHeight = textareaElement.offsetHeight;
+            //not use firstChild, but use firstElementChild, 
+            //please ensure there is a elementChild in lineNumberElement, <div>1</div>
+            var firstElementChildOffsetHeight = lineNumberElement.firstElementChild.offsetHeight;
+            // if inputArticle is hide, the textareaElementOffsetHeight == 0
+            // if inputArticle is hide, the firstElementChildOffsetHeight == 0
+            if (textareaElementOffsetHeight > 0 && firstElementChildOffsetHeight > 0) {
+                if (textareaElementOffsetHeight != textareaElement.oldOffsetHeight) {
+                    textareaElement.oldOffsetHeight = textareaElementOffsetHeight;
+                    //totalLineNumber append 1 
+                    var totalLineNumber = textareaElementOffsetHeight / firstElementChildOffsetHeight + 1;
                     if (lineNumberElement.totalLineNumber != totalLineNumber) {
                         lineNumberElement.totalLineNumber = totalLineNumber;
-                        document.getElementById(lineNumberId).innerHTML = showLineNumber(totalLineNumber);
+                        lineNumberElement.innerHTML = showLineNumber(totalLineNumber);
                         // ensure line offsetHeight equals textareaElement offsetHeight
-                        lineNumberElement.style.height = textareaElement.offsetHeight + "px";
+                        lineNumberElement.style.height = textareaElementOffsetHeight + "px";
                     }
                 }
+
 
             }
         }
