@@ -290,9 +290,17 @@
             if (contentPath != null) {
                 hideInputArticle();
                 var ajaxObj = new XMLHttpRequest();
-                ajaxObj.open('get', contentPath);
-                ajaxObj.send();
-
+                var method = getUrlParam("method");
+                if(!method){
+                     method="get";  
+                }
+                var requestBody = getUrlParam("requestBody");                                
+                ajaxObj.open(method, contentPath);
+                if(requestBody){
+                    ajaxObj.send(requestBody);
+                }else{
+                    ajaxObj.send();
+                }
                 ajaxObj.onreadystatechange = function () {
                     if (ajaxObj.readyState == 4) {
                         document.getElementById('inputTextarea').innerHTML = ajaxObj.responseText;
